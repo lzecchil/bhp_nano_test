@@ -178,7 +178,7 @@ def matching2 (Gp,Tp):
     return (mK,mpi)
 
 
-# In[ ]:
+# In[352]:
 
 
 h_IM_Phi.Reset()
@@ -297,13 +297,13 @@ for i in range(N):
     mB=matching1(tree,mPhi,mKs,hDenB,hNumB,hdRB,20,h_IM_B)
 
 
-# In[ ]:
+# In[353]:
 
 
 os.system("mkdir -p Plots")
 
 
-# In[ ]:
+# In[354]:
 
 
 c0=TCanvas("c0","pt distributions",200,10,700,500)
@@ -331,7 +331,7 @@ c0.Draw()
 c0.SaveAs("Plots/pt_distributions.png")
 
 
-# In[ ]:
+# In[355]:
 
 
 c00=TCanvas("c00","Eta distributions",200,10,700,500)
@@ -359,7 +359,7 @@ c00.Draw()
 c00.SaveAs("Plots/Eta_distributions.png")
 
 
-# In[ ]:
+# In[356]:
 
 
 c000=TCanvas("c000","Phi distributions",200,10,700,500)
@@ -387,7 +387,7 @@ c000.Draw()
 c000.SaveAs("Plots/Phi_distributions.png")
 
 
-# In[ ]:
+# In[357]:
 
 
 c0000=TCanvas("c0000","Phi invariant mass",200,10,700,500)
@@ -399,7 +399,7 @@ c0000.Draw()
 c0000.SaveAs("Plots/K+K- invariant mass.png")
 
 
-# In[ ]:
+# In[358]:
 
 
 c00000=TCanvas("c00000","Ks invariant mass",200,10,700,500)
@@ -411,7 +411,7 @@ c00000.Draw()
 c00000.SaveAs("Plots/pi+pi- invariant mass.png")
 
 
-# In[ ]:
+# In[359]:
 
 
 c000000=TCanvas("c000000","Phi invariant mass",200,10,700,500)
@@ -423,7 +423,7 @@ c000000.Draw()
 c000000.SaveAs("Plots/K+K-pi+pi- invariant mass.png")
 
 
-# In[ ]:
+# In[360]:
 
 
 h=TH1F("h","Efficiency(K) vs pt",100,0,25)
@@ -441,7 +441,7 @@ c1.Draw()
 c1.SaveAs("Plots/Efficiency(K)_vs_pt.png")
 
 
-# In[ ]:
+# In[361]:
 
 
 h1=TH1F("h1","Efficiency(K+) vs pt",100,0,25)
@@ -458,7 +458,7 @@ c1a.Draw()
 c1a.SaveAs("Plots/Efficiency(K+)_vs_pt.png")
 
 
-# In[ ]:
+# In[362]:
 
 
 h1b=TH1F("h1b","Efficiency(K-) vs pt",100,0,25)
@@ -475,7 +475,7 @@ c1b.Draw()
 c1b.SaveAs("Plots/Efficiency(K-)_vs_pt.png")
 
 
-# In[ ]:
+# In[363]:
 
 
 h2=TH1F("h2","Efficiency(pi) vs pt",100,0,25)
@@ -492,7 +492,7 @@ c2.Draw()
 c2.SaveAs("Plots/Efficiency(pi)_vs_pt.png")
 
 
-# In[ ]:
+# In[364]:
 
 
 h2a=TH1F("h2a","Efficiency(pi+) vs pt",100,0,25)
@@ -509,7 +509,7 @@ c2a.Draw()
 c2a.SaveAs("Plots/Efficiency(pi+)_vs_pt.png")
 
 
-# In[ ]:
+# In[365]:
 
 
 h2b=TH1F("h2b","Efficiency(pi-) vs pt",100,0,25)
@@ -526,7 +526,7 @@ c2b.Draw()
 c2b.SaveAs("Plots/Efficiency(pi-)_vs_pt.png")
 
 
-# In[ ]:
+# In[366]:
 
 
 h3=TH1F("h3","Efficiency vs pt",100,0,25)
@@ -544,7 +544,7 @@ c3.SaveAs("Plots/Efficiency_vs_pt.png")
     
 
 
-# In[ ]:
+# In[367]:
 
 
 c5=TCanvas("c5","K",200,10,700,500)
@@ -565,7 +565,7 @@ c5.Draw()
 c5.SaveAs("Plots/Gen_vs_Reco_K.png")
 
 
-# In[ ]:
+# In[368]:
 
 
 c6=TCanvas("c6","pi",200,10,700,500)
@@ -586,7 +586,7 @@ c6.Draw()
 c6.SaveAs("Plots/Gen_vs_Reco_pi.png")
 
 
-# In[ ]:
+# In[369]:
 
 
 c9=TCanvas("c9","dR",200,10,700,500)
@@ -595,7 +595,7 @@ c9.Draw()
 c9.SaveAs("Plots/dR.png")
 
 
-# In[ ]:
+# In[370]:
 
 
 c10=TCanvas("c10","dR dei K",200,10,700,500)
@@ -604,7 +604,7 @@ c10.Draw()
 c10.SaveAs("Plots/dR(K).png")
 
 
-# In[ ]:
+# In[371]:
 
 
 c11=TCanvas("c11","dR dei pi",200,10,700,500)
@@ -613,7 +613,7 @@ c11.Draw()
 c11.SaveAs("Plots/dR(pi).png")
 
 
-# In[ ]:
+# In[372]:
 
 
 h10=TH1F("h10","Efficiency(Phi) vs pt",100,0,25)
@@ -630,7 +630,7 @@ c12.Draw()
 c12.SaveAs("Plots/Efficiency(Phi)_vs_pt.png")
 
 
-# In[ ]:
+# In[373]:
 
 
 h11=TH1F("h11","Efficiency(Ks) vs pt",100,0,25)
@@ -647,7 +647,7 @@ c13.Draw()
 c13.SaveAs("Plots/Efficiency(Ks)_vs_pt.png")
 
 
-# In[ ]:
+# In[374]:
 
 
 c14=TCanvas("c14","dR dei Phi",200,10,700,500)
@@ -656,7 +656,7 @@ c14.Draw()
 c14.SaveAs("Plots/dR(Phi).png")
 
 
-# In[ ]:
+# In[375]:
 
 
 c15=TCanvas("c15","dR dei Ks",200,10,700,500)
@@ -665,7 +665,7 @@ c15.Draw()
 c15.SaveAs("Plots/dR(Ks).png")
 
 
-# In[ ]:
+# In[376]:
 
 
 h12=TH1F("h12","Efficiency(B) vs pt",100,0,25)
@@ -682,7 +682,7 @@ c16.Draw()
 c16.SaveAs("Plots/Efficiency(B)_vs_pt.png")
 
 
-# In[ ]:
+# In[377]:
 
 
 c17=TCanvas("c17","dR dei B",200,10,700,500)
@@ -691,7 +691,7 @@ c17.Draw()
 c17.SaveAs("Plots/dR(B).png")
 
 
-# In[ ]:
+# In[378]:
 
 
 get_ipython().system('jupyter nbconvert --to script Untitled.ipynb')
