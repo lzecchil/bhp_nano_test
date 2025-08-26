@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[348]:
+# In[1]:
 
 
 import os
@@ -21,7 +21,7 @@ N = tree.GetEntries()
 print("total number of events=",N)
 
 
-# In[349]:
+# In[2]:
 
 
 h_IM_Phi=TH1F("h_IM_Phi","K+K- invariant mass",100,0.98,1.1)
@@ -66,8 +66,23 @@ hNumB=TH1F("hNumB","reco B vs pt",100,0,25)
 hDenB=TH1F("hDenB","gen B vs pt",100,0,25)
 hdRB=TH1F("hdRB","dR distribution (B)",100,0,25)
 
+M_hNumKp=TH1F("hNumKp","reco K+ vs pt",100,0,25)
+M_hNumKm=TH1F("hNumKm","reco K- vs pt",100,0,25)
+M_hNumpip=TH1F("hNumpip","reco pi+ vs pt",100,0,25)
+M_hNumpim=TH1F("hNumpim","reco pi- vs pt",100,0,25)
+M_hDenKp=TH1F("hDenKp","gen K+ vs pt",100,0,25)
+M_hDenKm=TH1F("hDenKm","gen K- vs pt",100,0,25)
+M_hDenpip=TH1F("hDenpip","gen pi+ vs pt",100,0,25)
+M_hDenpim=TH1F("hDenpim","gen pi- vs pt",100,0,25)
+M_hNumB=TH1F("hNumB","reco B vs pt",100,0,25)
+M_hDenB=TH1F("hDenB","gen B vs pt",100,0,25)
+M_hNumPhi=TH1F("hNumPhi","reco Phi vs pt",100,0,25)
+M_hDenPhi=TH1F("hDenPhi","Gen Phi vs pt",100,0,25)
+M_hNumKs=TH1F("hNumKs","reco Ks vs pt",100,0,25)
+M_hDenKs=TH1F("hDenKs","Gen Ks vs pt",100,0,25)
 
-# In[350]:
+
+# In[3]:
 
 
 def matching1(tree,p,m,hDen,hNum,hdR,th,hIM):
@@ -91,10 +106,10 @@ def matching1(tree,p,m,hDen,hNum,hdR,th,hIM):
     return matches          
 
 
-# In[351]:
+# In[4]:
 
 
-def matching2 (Gp,Tp):
+def matching2 (Gp,Tp,t):
     pdg = ROOT.TDatabasePDG.Instance()
     mK=[]
     mpi=[]
@@ -144,28 +159,40 @@ def matching2 (Gp,Tp):
             hdR.Fill(dr)
             Tp[e].SetPtEtaPhiM(Tp[e].Pt(),Tp[e].Eta(),Tp[e].Phi(),pdg.GetParticle(Gp[ind][2]).Mass())
             if Gp[ind][2]==321:
-                hNum.Fill(Gp[ind][3])
-                hNumK.Fill(Gp[ind][3])
-                hNumKp.Fill(Gp[ind][3])
-                hdRK.Fill(dr)
+                if t:
+                    hNum.Fill(Gp[ind][3])
+                    hNumK.Fill(Gp[ind][3])
+                    hNumKp.Fill(Gp[ind][3])
+                    hdRK.Fill(dr)
+                else:
+                    M_hNumKp.Fill(Gp[ind][3])
                 mK.append((Gp[ind][0],Gp[ind][1],Tp[e]))
             elif Gp[ind][2]==-321:
-                hNum.Fill(Gp[ind][3])
-                hNumK.Fill(Gp[ind][3])
-                hNumKm.Fill(Gp[ind][3])
-                hdRK.Fill(dr)
+                if t:
+                    hNum.Fill(Gp[ind][3])
+                    hNumK.Fill(Gp[ind][3])
+                    hNumKm.Fill(Gp[ind][3])
+                    hdRK.Fill(dr)
+                else:
+                    M_hNumKm.Fill(Gp[ind][3])
                 mK.append((Gp[ind][0],Gp[ind][1],Tp[e]))
             elif Gp[ind][2]==211:
-                hNum.Fill(Gp[ind][3])
-                hNumpi.Fill(Gp[ind][3])
-                hNumpip.Fill(Gp[ind][3])
-                hdRpi.Fill(dr)
+                if t:
+                    hNum.Fill(Gp[ind][3])
+                    hNumpi.Fill(Gp[ind][3])
+                    hNumpip.Fill(Gp[ind][3])
+                    hdRpi.Fill(dr)
+                else:
+                    M_hNumpip.Fill(Gp[ind][3])
                 mpi.append((Gp[ind][0],Gp[ind][1],Tp[e]))
             else:
-                hNum.Fill(Gp[ind][3])
-                hNumpi.Fill(Gp[ind][3])
-                hNumpim.Fill(Gp[ind][3])
-                hdRpi.Fill(dr)
+                if t:
+                    hNum.Fill(Gp[ind][3])
+                    hNumpi.Fill(Gp[ind][3])
+                    hNumpim.Fill(Gp[ind][3])
+                    hdRpi.Fill(dr)
+                else:
+                    M_hNumpim.Fill(Gp[ind][3])
                 mpi.append((Gp[ind][0],Gp[ind][1],Tp[e]))
             l_g.append(ind)
             l_t.append(e)
@@ -178,132 +205,147 @@ def matching2 (Gp,Tp):
     return (mK,mpi)
 
 
-# In[352]:
+# In[5]:
 
 
-h_IM_Phi.Reset()
-h_IM_Ks.Reset()
-h_IM_B.Reset()
-h_pt_Kp.Reset()
-h_pt_Km.Reset()
-h_pt_pip.Reset()
-h_pt_pim.Reset()
-h_Eta_Kp.Reset()
-h_Eta_Km.Reset()
-h_Eta_pip.Reset()
-h_Eta_pim.Reset()
-h_Phi_Kp.Reset()
-h_Phi_Km.Reset()
-h_Phi_pip.Reset()
-h_Phi_pim.Reset()
-hNumK.Reset()
-hNumKp.Reset()
-hNumKm.Reset()
-hNumpi.Reset()
-hNumpip.Reset()
-hNumpim.Reset()
-hNum.Reset()
-hDen.Reset()
-hDenK.Reset()
-hDenKp.Reset()
-hDenKm.Reset()
-hDenpi.Reset()
-hDenpip.Reset()
-hDenpim.Reset()
-hdR.Reset()
-hdRK.Reset()
-hdRpi.Reset()
-hNumPhi.Reset()
-hDenPhi.Reset()
-hNumKs.Reset()
-hDenKs.Reset()
-hNumB.Reset()
-hDenB.Reset()
-hdRPhi.Reset()
-hdRB.Reset()
-hdRKs.Reset()
-pdg = ROOT.TDatabasePDG.Instance()
-for i in range(N):
-    tree.GetEntry(i)
-    Kp=[]
-    Km=[]
-    pip=[]
-    pim=[]
-    for id,midx,pt,eta,phi,st,mass in zip(tree.GenPart_pdgId,tree.GenPart_genPartIdxMother,tree.GenPart_pt,tree.GenPart_eta,tree.GenPart_phi,tree.GenPart_status,tree.GenPart_mass):
-        gmidx=tree.GenPart_genPartIdxMother[midx]
-        if abs(tree.GenPart_pdgId[gmidx])==511 and st==1:
-            if abs((tree.GenPart_pdgId[midx]))==333:
-                if id==321:
-                    hDenB.Fill(tree.GenPart_pt[gmidx])
-                    hDenPhi.Fill(tree.GenPart_pt[midx])
-                    hDen.Fill(pt)
-                    hDenK.Fill(pt)
-                    hDenKp.Fill(pt)
-                    GenP=TLorentzVector()
-                    GenP.SetPtEtaPhiM(pt,eta,phi,mass)
-                    Kp.append((GenP,midx,id,pt))
-                elif id==-321:
-                    hDen.Fill(pt)
-                    hDenK.Fill(pt)
-                    hDenKm.Fill(pt)
-                    GenP=TLorentzVector()
-                    GenP.SetPtEtaPhiM(pt,eta,phi,mass)
-                    Km.append((GenP,midx,id,pt))
-            elif abs((tree.GenPart_pdgId[midx]))==310:
-                if id==211:
-                    hDenKs.Fill(tree.GenPart_pt[midx])
-                    hDen.Fill(pt)
-                    hDenpi.Fill(pt)
-                    hDenpip.Fill(pt)
-                    GenP=TLorentzVector()
-                    GenP.SetPtEtaPhiM(pt,eta,phi,pdg.GetParticle(id).Mass())
-                    pip.append((GenP,midx,id,pt))
-                elif id==-211:
-                    hDen.Fill(pt)
-                    hDenpi.Fill(pt)
-                    hDenpim.Fill(pt)
-                    GenP=TLorentzVector()
-                    GenP.SetPtEtaPhiM(pt,eta,phi,pdg.GetParticle(id).Mass())
-                    pim.append((GenP,midx,id,pt))
-    Tp=[]
-    Tm=[]
-    for ch,t_pt,t_eta,t_phi,t_mass in zip(tree.Track_charge,tree.Track_pt,tree.Track_eta,tree.Track_phi,tree.Track_mass):
-        Track=TLorentzVector()
-        Track.SetPtEtaPhiM(t_pt,t_eta,t_phi,t_mass)
-        if ch==1:
-            Tp.append(Track)
-        elif ch==-1:
-            Tm.append(Track)
-    mKp,mpip=matching2(Kp+pip,Tp)
-    mKm,mpim=matching2(Km+pim,Tm)
-    for e in mKp:
-        h_pt_Kp.Fill(e[2].Pt())
-        h_Eta_Kp.Fill(e[2].Eta())
-        h_Phi_Kp.Fill(e[2].Phi())
-    for e in mKm:
-        h_pt_Km.Fill(e[2].Pt())
-        h_Eta_Km.Fill(e[2].Eta())
-        h_Phi_Km.Fill(e[2].Phi())
-    for e in mpip:
-        h_pt_pip.Fill(e[2].Pt())
-        h_Eta_pip.Fill(e[2].Eta())
-        h_Phi_pip.Fill(e[2].Phi())
-    for e in mpim:
-        h_pt_pim.Fill(e[2].Pt())
-        h_Eta_pim.Fill(e[2].Eta())
-        h_Phi_pim.Fill(e[2].Phi())
-    mPhi=matching1(tree,mKp,mKm,hDenPhi,hNumPhi,hdRPhi,20,h_IM_Phi)
-    mKs=matching1(tree,mpip,mpim,hDenKs,hNumKs,hdRKs,20,h_IM_Ks)
-    mB=matching1(tree,mPhi,mKs,hDenB,hNumB,hdRB,20,h_IM_B)
+def main(t,tree,hNumKp,hNumKm,hNumpip,hNumpim,hDenKp,hDenKm,hDenpip,hDenpim,hNumPhi,hDenPhi,hNumKs,hDenKs,hNumB,hDenB):
+    h_IM_Phi.Reset()
+    h_IM_Ks.Reset()
+    h_IM_B.Reset()
+    h_pt_Kp.Reset()
+    h_pt_Km.Reset()
+    h_pt_pip.Reset()
+    h_pt_pim.Reset()
+    h_Eta_Kp.Reset()
+    h_Eta_Km.Reset()
+    h_Eta_pip.Reset()
+    h_Eta_pim.Reset()
+    h_Phi_Kp.Reset()
+    h_Phi_Km.Reset()
+    h_Phi_pip.Reset()
+    h_Phi_pim.Reset()
+    hNumK.Reset()
+    hNumKp.Reset()
+    hNumKm.Reset()
+    hNumpi.Reset()
+    hNumpip.Reset()
+    hNumpim.Reset()
+    hNum.Reset()
+    hDen.Reset()
+    hDenK.Reset()
+    hDenKp.Reset()
+    hDenKm.Reset()
+    hDenpi.Reset()
+    hDenpip.Reset()
+    hDenpim.Reset()
+    hdR.Reset()
+    hdRK.Reset()
+    hdRpi.Reset()
+    hNumPhi.Reset()
+    hDenPhi.Reset()
+    hNumKs.Reset()
+    hDenKs.Reset()
+    hNumB.Reset()
+    hDenB.Reset()
+    hdRPhi.Reset()
+    hdRB.Reset()
+    hdRKs.Reset()
+    pdg = ROOT.TDatabasePDG.Instance()
+    for i in range(N):
+        tree.GetEntry(i)
+        Kp=[]
+        Km=[]
+        pip=[]
+        pim=[]
+        go=False
+        if t==True:
+            for m_eta,m_pt in zip(tree.AllMuon_eta,tree.AllMuon_pt):
+                if abs(m_eta)<1.5 and m_pt>9:
+                    go=True
+        else:
+            go=True
+        if go:
+            for id,midx,pt,eta,phi,st,mass, in zip(tree.GenPart_pdgId,tree.GenPart_genPartIdxMother,tree.GenPart_pt,tree.GenPart_eta,tree.GenPart_phi,tree.GenPart_status,tree.GenPart_mass):
+                gmidx=tree.GenPart_genPartIdxMother[midx]
+                if abs(tree.GenPart_pdgId[gmidx])==511 and st==1:
+                    if abs((tree.GenPart_pdgId[midx]))==333:
+                        if id==321:
+                            hDenB.Fill(tree.GenPart_pt[gmidx])
+                            hDenPhi.Fill(tree.GenPart_pt[midx])
+                            hDen.Fill(pt)
+                            hDenK.Fill(pt)
+                            hDenKp.Fill(pt)
+                            GenP=TLorentzVector()
+                            GenP.SetPtEtaPhiM(pt,eta,phi,mass)
+                            Kp.append((GenP,midx,id,pt))
+                        elif id==-321:
+                            hDen.Fill(pt)
+                            hDenK.Fill(pt)
+                            hDenKm.Fill(pt)
+                            GenP=TLorentzVector()
+                            GenP.SetPtEtaPhiM(pt,eta,phi,mass)
+                            Km.append((GenP,midx,id,pt))
+                    elif abs((tree.GenPart_pdgId[midx]))==310:
+                        if id==211:
+                            hDenKs.Fill(tree.GenPart_pt[midx])
+                            hDen.Fill(pt)
+                            hDenpi.Fill(pt)
+                            hDenpip.Fill(pt)
+                            GenP=TLorentzVector()
+                            GenP.SetPtEtaPhiM(pt,eta,phi,pdg.GetParticle(id).Mass())
+                            pip.append((GenP,midx,id,pt))
+                        elif id==-211:
+                            hDen.Fill(pt)
+                            hDenpi.Fill(pt)
+                            hDenpim.Fill(pt)
+                            GenP=TLorentzVector()
+                            GenP.SetPtEtaPhiM(pt,eta,phi,pdg.GetParticle(id).Mass())
+                            pim.append((GenP,midx,id,pt))
+        Tp=[]
+        Tm=[]
+        for ch,t_pt,t_eta,t_phi,t_mass in zip(tree.Track_charge,tree.Track_pt,tree.Track_eta,tree.Track_phi,tree.Track_mass):
+            Track=TLorentzVector()
+            Track.SetPtEtaPhiM(t_pt,t_eta,t_phi,t_mass)
+            if ch==1:
+                Tp.append(Track)
+            elif ch==-1:
+                Tm.append(Track)
+        mKp,mpip=matching2(Kp+pip,Tp,t)
+        mKm,mpim=matching2(Km+pim,Tm,t)
+        for e in mKp:
+            h_pt_Kp.Fill(e[2].Pt())
+            h_Eta_Kp.Fill(e[2].Eta())
+            h_Phi_Kp.Fill(e[2].Phi())
+        for e in mKm:
+            h_pt_Km.Fill(e[2].Pt())
+            h_Eta_Km.Fill(e[2].Eta())
+            h_Phi_Km.Fill(e[2].Phi())
+        for e in mpip:
+            h_pt_pip.Fill(e[2].Pt())
+            h_Eta_pip.Fill(e[2].Eta())
+            h_Phi_pip.Fill(e[2].Phi())
+        for e in mpim:
+            h_pt_pim.Fill(e[2].Pt())
+            h_Eta_pim.Fill(e[2].Eta())
+            h_Phi_pim.Fill(e[2].Phi())
+        mPhi=matching1(tree,mKp,mKm,hDenPhi,hNumPhi,hdRPhi,20,h_IM_Phi)
+        mKs=matching1(tree,mpip,mpim,hDenKs,hNumKs,hdRKs,20,h_IM_Ks)
+        mB=matching1(tree,mPhi,mKs,hDenB,hNumB,hdRB,20,h_IM_B)
 
 
-# In[353]:
+# In[ ]:
+
+
+main(True,tree,hNumKp,hNumKm,hNumpip,hNumpim,hDenKp,hDenKm,hDenpip,hDenpim,hNumPhi,hDenPhi,hNumKs,hDenKs,hNumB,hDenB)
+
+
+# In[ ]:
 
 
 os.system("mkdir -p Plots")
 
 
-# In[354]:
+# In[ ]:
 
 
 c0=TCanvas("c0","pt distributions",200,10,700,500)
@@ -331,7 +373,7 @@ c0.Draw()
 c0.SaveAs("Plots/pt_distributions.png")
 
 
-# In[355]:
+# In[ ]:
 
 
 c00=TCanvas("c00","Eta distributions",200,10,700,500)
@@ -359,7 +401,7 @@ c00.Draw()
 c00.SaveAs("Plots/Eta_distributions.png")
 
 
-# In[356]:
+# In[ ]:
 
 
 c000=TCanvas("c000","Phi distributions",200,10,700,500)
@@ -387,7 +429,7 @@ c000.Draw()
 c000.SaveAs("Plots/Phi_distributions.png")
 
 
-# In[357]:
+# In[ ]:
 
 
 c0000=TCanvas("c0000","Phi invariant mass",200,10,700,500)
@@ -399,7 +441,7 @@ c0000.Draw()
 c0000.SaveAs("Plots/K+K- invariant mass.png")
 
 
-# In[358]:
+# In[ ]:
 
 
 c00000=TCanvas("c00000","Ks invariant mass",200,10,700,500)
@@ -411,7 +453,7 @@ c00000.Draw()
 c00000.SaveAs("Plots/pi+pi- invariant mass.png")
 
 
-# In[359]:
+# In[ ]:
 
 
 c000000=TCanvas("c000000","Phi invariant mass",200,10,700,500)
@@ -423,7 +465,7 @@ c000000.Draw()
 c000000.SaveAs("Plots/K+K-pi+pi- invariant mass.png")
 
 
-# In[360]:
+# In[ ]:
 
 
 h=TH1F("h","Efficiency(K) vs pt",100,0,25)
@@ -441,7 +483,7 @@ c1.Draw()
 c1.SaveAs("Plots/Efficiency(K)_vs_pt.png")
 
 
-# In[361]:
+# In[ ]:
 
 
 h1=TH1F("h1","Efficiency(K+) vs pt",100,0,25)
@@ -458,7 +500,7 @@ c1a.Draw()
 c1a.SaveAs("Plots/Efficiency(K+)_vs_pt.png")
 
 
-# In[362]:
+# In[ ]:
 
 
 h1b=TH1F("h1b","Efficiency(K-) vs pt",100,0,25)
@@ -475,7 +517,7 @@ c1b.Draw()
 c1b.SaveAs("Plots/Efficiency(K-)_vs_pt.png")
 
 
-# In[363]:
+# In[ ]:
 
 
 h2=TH1F("h2","Efficiency(pi) vs pt",100,0,25)
@@ -492,7 +534,7 @@ c2.Draw()
 c2.SaveAs("Plots/Efficiency(pi)_vs_pt.png")
 
 
-# In[364]:
+# In[ ]:
 
 
 h2a=TH1F("h2a","Efficiency(pi+) vs pt",100,0,25)
@@ -509,7 +551,7 @@ c2a.Draw()
 c2a.SaveAs("Plots/Efficiency(pi+)_vs_pt.png")
 
 
-# In[365]:
+# In[ ]:
 
 
 h2b=TH1F("h2b","Efficiency(pi-) vs pt",100,0,25)
@@ -526,7 +568,7 @@ c2b.Draw()
 c2b.SaveAs("Plots/Efficiency(pi-)_vs_pt.png")
 
 
-# In[366]:
+# In[ ]:
 
 
 h3=TH1F("h3","Efficiency vs pt",100,0,25)
@@ -544,7 +586,7 @@ c3.SaveAs("Plots/Efficiency_vs_pt.png")
     
 
 
-# In[367]:
+# In[ ]:
 
 
 c5=TCanvas("c5","K",200,10,700,500)
@@ -565,7 +607,7 @@ c5.Draw()
 c5.SaveAs("Plots/Gen_vs_Reco_K.png")
 
 
-# In[368]:
+# In[ ]:
 
 
 c6=TCanvas("c6","pi",200,10,700,500)
@@ -586,7 +628,7 @@ c6.Draw()
 c6.SaveAs("Plots/Gen_vs_Reco_pi.png")
 
 
-# In[369]:
+# In[ ]:
 
 
 c9=TCanvas("c9","dR",200,10,700,500)
@@ -595,7 +637,7 @@ c9.Draw()
 c9.SaveAs("Plots/dR.png")
 
 
-# In[370]:
+# In[ ]:
 
 
 c10=TCanvas("c10","dR dei K",200,10,700,500)
@@ -604,7 +646,7 @@ c10.Draw()
 c10.SaveAs("Plots/dR(K).png")
 
 
-# In[371]:
+# In[ ]:
 
 
 c11=TCanvas("c11","dR dei pi",200,10,700,500)
@@ -613,7 +655,7 @@ c11.Draw()
 c11.SaveAs("Plots/dR(pi).png")
 
 
-# In[372]:
+# In[74]:
 
 
 h10=TH1F("h10","Efficiency(Phi) vs pt",100,0,25)
@@ -630,7 +672,7 @@ c12.Draw()
 c12.SaveAs("Plots/Efficiency(Phi)_vs_pt.png")
 
 
-# In[373]:
+# In[75]:
 
 
 h11=TH1F("h11","Efficiency(Ks) vs pt",100,0,25)
@@ -647,7 +689,7 @@ c13.Draw()
 c13.SaveAs("Plots/Efficiency(Ks)_vs_pt.png")
 
 
-# In[374]:
+# In[76]:
 
 
 c14=TCanvas("c14","dR dei Phi",200,10,700,500)
@@ -656,7 +698,7 @@ c14.Draw()
 c14.SaveAs("Plots/dR(Phi).png")
 
 
-# In[375]:
+# In[77]:
 
 
 c15=TCanvas("c15","dR dei Ks",200,10,700,500)
@@ -665,7 +707,7 @@ c15.Draw()
 c15.SaveAs("Plots/dR(Ks).png")
 
 
-# In[376]:
+# In[78]:
 
 
 h12=TH1F("h12","Efficiency(B) vs pt",100,0,25)
@@ -682,7 +724,7 @@ c16.Draw()
 c16.SaveAs("Plots/Efficiency(B)_vs_pt.png")
 
 
-# In[377]:
+# In[79]:
 
 
 c17=TCanvas("c17","dR dei B",200,10,700,500)
@@ -691,12 +733,187 @@ c17.Draw()
 c17.SaveAs("Plots/dR(B).png")
 
 
-# In[378]:
+# In[80]:
 
 
-get_ipython().system('jupyter nbconvert --to script Untitled.ipynb')
+main(False,tree,M_hNumKp,M_hNumKm,M_hNumpip,M_hNumpim,M_hDenKp,M_hDenKm,M_hDenpip,M_hDenpim,M_hNumPhi,M_hDenPhi,M_hNumKs,M_hDenKs,M_hNumB,M_hDenB)
 
 
+# In[ ]:
+
+
+cc=TCanvas("cc","Efficiency Kp trigger compared to no trigger",200,10,700,500)
+cc.cd()
+hEffT=hNumKp.Clone("Efficiency for K+, trigger compared to no trigger")
+hEffT.Divide(hDenKp)
+hEffNT=M_hNumKp.Clone()
+hEffNT.Divide(M_hDenKp)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for K+, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.3,0.2,0.15,0.4)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc.Draw()
+cc6.SaveAs("Plots/compared_efficiencies_Kp.png")
+
+
+# In[ ]:
+
+
+cc1=TCanvas("cc1","Efficiency pip trigger compared to no trigger",200,10,700,500)
+cc1.cd()
+hEffT=hNumpip.Clone("Efficiency for pi+, trigger compared to no trigger")
+hEffT.Divide(hDenpip)
+hEffNT=M_hNumpip.Clone()
+hEffNT.Divide(M_hDenpip)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for pi+, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.3,0.8,0.15,0.6)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc1.Draw()
+cc1.SaveAs("Plots/compared_efficiencies_pip.png")
+
+
+# In[ ]:
+
+
+cc2=TCanvas("cc2","Efficiency Km trigger compared to no trigger",200,10,700,500)
+cc2.cd()
+hEffT=hNumKm.Clone("Efficiency for K+, trigger compared to no trigger")
+hEffT.Divide(hDenKm)
+hEffNT=M_hNumKm.Clone()
+hEffNT.Divide(M_hDenKm)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for K+, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.3,0.2,0.15,0.4)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc2.Draw()
+cc2.SaveAs("Plots/compared_efficiencies_Km.png")
+
+
+# In[ ]:
+
+
+cc3=TCanvas("cc3","Efficiency pim trigger compared to no trigger",200,10,700,500)
+cc3.cd()
+hEffT=hNumpim.Clone("Efficiency for pi-, trigger compared to no trigger")
+hEffT.Divide(hDenpim)
+hEffNT=M_hNumpim.Clone()
+hEffNT.Divide(M_hDenpim)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for pi-, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.3,0.8,0.15,0.6)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc3.Draw()
+cc3.SaveAs("Plots/compared_efficiencies_pim.png")
+
+
+# In[ ]:
+
+
+cc4=TCanvas("cc4","Efficiency Phi trigger compared to no trigger",200,10,700,500)
+cc4.cd()
+hEffT=hNumPhi.Clone("Efficiency for Phi, trigger compared to no trigger")
+hEffT.Divide(hDenPhi)
+hEffNT=M_hNumPhi.Clone()
+hEffNT.Divide(M_hDenPhi)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for Phi, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.7,0.8,0.85,0.6)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc4.Draw()
+cc4.SaveAs("Plots/compared_efficiencies_Phi.png")
+
+
+# In[ ]:
+
+
+cc5=TCanvas("cc5","Efficiency Ks trigger compared to no trigger",200,10,700,500)
+cc5.cd()
+hEffT=hNumKs.Clone("Efficiency for Ks, trigger compared to no trigger")
+hEffT.Divide(hDenKs)
+hEffNT=M_hNumKs.Clone()
+hEffNT.Divide(M_hDenKs)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for Ks, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.7,0.8,0.85,0.6)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc5.Draw()
+cc5.SaveAs("Plots/compared_efficiencies_Ks.png")
+
+
+# In[ ]:
+
+
+cc6=TCanvas("cc6","Efficiency B trigger compared to no trigger",200,10,700,500)
+cc6.cd()
+hEffT=hNumB.Clone("Efficiency for B, trigger compared to no trigger")
+hEffT.Divide(hDenB)
+hEffNT=M_hNumB.Clone()
+hEffNT.Divide(M_hDenB)
+hEffT.SetLineColor(2)
+hEffNT.SetLineColor(4)
+hEffT.Draw()
+hEffNT.Draw("same")
+hEffT.SetTitle("Efficiency for B, trigger compared to no trigger")
+hEffT.GetXaxis().SetTitle("p_{t} [Gev/c]")
+hEffT.GetYaxis().SetTitle("Efficiency")
+legend=TLegend(0.7,0.8,0.85,0.6)
+legend.AddEntry(hEffT,"Eff. trigger")
+legend.AddEntry(hEffNT,"Eff. no trigger")
+ROOT.gStyle.SetLegendTextSize(0.05)
+legend.Draw()
+cc6.Draw()
+cc6.SaveAs("Plots/compared_efficiencies_B.png")
+
+!jupyter nbconvert --to script Untitled.ipynb
 # In[ ]:
 
 
