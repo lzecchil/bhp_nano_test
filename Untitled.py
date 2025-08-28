@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[98]:
+# In[48]:
 
 
 import os
@@ -21,7 +21,7 @@ N = tree.GetEntries()
 print("total number of events=",N)
 
 
-# In[99]:
+# In[49]:
 
 
 hNumpip_d=TH1F("hNumpip_d","reco pi+ vs displacement",100,0,50)
@@ -72,11 +72,11 @@ hNumPhi=TH1F("hNumPhi","reco Phi vs pt",100,0,25)
 hDenPhi=TH1F("hDenPhi","Gen Phi vs pt",100,0,25)
 hNumKs=TH1F("hNumKs","reco Ks vs pt",100,0,25)
 hDenKs=TH1F("hDenKs","Gen Ks vs pt",100,0,25)
-hdRPhi=TH1F("hdRPhi","dR distribution (Phi)",100,0,25)
-hdRKs=TH1F("hdRKs","dR distribution (Ks)",100,0,25)
+hdRPhi=TH1F("hdRPhi","dR distribution (Phi)",100,0,0.025)
+hdRKs=TH1F("hdRKs","dR distribution (Ks)",100,0,0.025)
 hNumB=TH1F("hNumB","reco B vs pt",100,0,25)
 hDenB=TH1F("hDenB","gen B vs pt",100,0,25)
-hdRB=TH1F("hdRB","dR distribution (B)",100,0,25)
+hdRB=TH1F("hdRB","dR distribution (B)",100,0,0.025)
 
 M_hNumKp=TH1F("hNumKp","reco K+ vs pt",100,0,25)
 M_hNumKm=TH1F("hNumKm","reco K- vs pt",100,0,25)
@@ -94,7 +94,7 @@ M_hNumKs=TH1F("hNumKs","reco Ks vs pt",100,0,25)
 M_hDenKs=TH1F("hDenKs","Gen Ks vs pt",100,0,25)
 
 
-# In[100]:
+# In[50]:
 
 
 def deltaR(T1,T2):
@@ -105,7 +105,7 @@ def deltaR(T1,T2):
     return ROOT.TMath.Sqrt((dPhi)**2+(dEta)**2)
 
 
-# In[101]:
+# In[51]:
 
 
 def matching1(tree,p,m,hDen,hNum,hdR,th,hIM):
@@ -114,13 +114,13 @@ def matching1(tree,p,m,hDen,hNum,hdR,th,hIM):
         for minus in m:
             if plus[1]==minus[1]:
                 pt=tree.GenPart_pt[plus[1]]
-                eta=tree.GenPart_pt[plus[1]]
-                phi=tree.GenPart_pt[plus[1]]
+                eta=tree.GenPart_eta[plus[1]]
+                phi=tree.GenPart_phi[plus[1]]
                 mass=tree.GenPart_mass[plus[1]]
                 GenMother=TLorentzVector()
                 GenMother.SetPtEtaPhiM(pt,eta,phi,mass)
                 RecoMother=plus[2]+minus[2]
-                dr=GenMother.DeltaR(RecoMother)
+                dr=deltaR(GenMother,RecoMother)
                 hIM.Fill(RecoMother.M())
                 hdR.Fill(dr)
                 if dr<th:
@@ -129,7 +129,7 @@ def matching1(tree,p,m,hDen,hNum,hdR,th,hIM):
     return matches          
 
 
-# In[102]:
+# In[52]:
 
 
 def matching2 (Gp,Tp,t):
@@ -232,7 +232,7 @@ def matching2 (Gp,Tp,t):
     return (mK,mpi)
 
 
-# In[103]:
+# In[53]:
 
 
 def main(t,tree,hNumKp,hNumKm,hNumpip,hNumpim,hDenKp,hDenKm,hDenpip,hDenpim,hNumPhi,hDenPhi,hNumKs,hDenKs,hNumB,hDenB):
@@ -394,24 +394,24 @@ def main(t,tree,hNumKp,hNumKm,hNumpip,hNumpim,hDenKp,hDenKm,hDenpip,hDenpim,hNum
                 h_Eta_pim.Fill(e[2].Eta())
                 h_Phi_pim.Fill(e[2].Phi())
 
-            mPhi=matching1(tree,mKp,mKm,hDenPhi,hNumPhi,hdRPhi,20,h_IM_Phi)
-            mKs=matching1(tree,mpip,mpim,hDenKs,hNumKs,hdRKs,20,h_IM_Ks)
-            mB=matching1(tree,mPhi,mKs,hDenB,hNumB,hdRB,20,h_IM_B)
+            mPhi=matching1(tree,mKp,mKm,hDenPhi,hNumPhi,hdRPhi,0.01,h_IM_Phi)
+            mKs=matching1(tree,mpip,mpim,hDenKs,hNumKs,hdRKs,0.01,h_IM_Ks)
+            mB=matching1(tree,mPhi,mKs,hDenB,hNumB,hdRB,0.01,h_IM_B)
 
 
-# In[104]:
+# In[54]:
 
 
 main(False,tree,hNumKp,hNumKm,hNumpip,hNumpim,hDenKp,hDenKm,hDenpip,hDenpim,hNumPhi,hDenPhi,hNumKs,hDenKs,hNumB,hDenB)
 
 
-# In[105]:
+# In[55]:
 
 
 os.system("mkdir -p Plots")
 
 
-# In[106]:
+# In[56]:
 
 
 c0=TCanvas("c0","pt distributions",200,10,700,500)
@@ -439,7 +439,7 @@ c0.Draw()
 c0.SaveAs("Plots/pt_distributions.png")
 
 
-# In[107]:
+# In[57]:
 
 
 c00=TCanvas("c00","Eta distributions",200,10,700,500)
@@ -467,7 +467,7 @@ c00.Draw()
 c00.SaveAs("Plots/Eta_distributions.png")
 
 
-# In[108]:
+# In[58]:
 
 
 c000=TCanvas("c000","Phi distributions",200,10,700,500)
@@ -495,7 +495,7 @@ c000.Draw()
 c000.SaveAs("Plots/Phi_distributions.png")
 
 
-# In[109]:
+# In[59]:
 
 
 c0000=TCanvas("c0000","Phi invariant mass",200,10,700,500)
@@ -507,7 +507,7 @@ c0000.Draw()
 c0000.SaveAs("Plots/K+K- invariant mass.png")
 
 
-# In[110]:
+# In[60]:
 
 
 c00000=TCanvas("c00000","Ks invariant mass",200,10,700,500)
@@ -519,7 +519,7 @@ c00000.Draw()
 c00000.SaveAs("Plots/pi+pi- invariant mass.png")
 
 
-# In[111]:
+# In[61]:
 
 
 c000000=TCanvas("c000000","Phi invariant mass",200,10,700,500)
@@ -531,7 +531,7 @@ c000000.Draw()
 c000000.SaveAs("Plots/K+K-pi+pi- invariant mass.png")
 
 
-# In[112]:
+# In[62]:
 
 
 h11a=TH1F("h11a","Efficiency(K+) vs d",100,0,50)
@@ -548,7 +548,7 @@ ccc1a.Draw()
 ccc1a.SaveAs("Plots/Efficiency(K+)_vs_d.png")
 
 
-# In[113]:
+# In[63]:
 
 
 h11b=TH1F("h11b","Efficiency(K-) vs d",100,0,50)
@@ -565,7 +565,7 @@ ccc1b.Draw()
 ccc1b.SaveAs("Plots/Efficiency(K-)_vs_d.png")
 
 
-# In[114]:
+# In[64]:
 
 
 h22a=TH1F("h22a","Efficiency(pi+) vs d",100,0,50)
@@ -582,7 +582,7 @@ ccc2a.Draw()
 ccc2a.SaveAs("Plots/Efficiency(pi+)_vs_d.png")
 
 
-# In[115]:
+# In[65]:
 
 
 h22b=TH1F("h22b","Efficiency(pi-) vs d",100,0,50)
@@ -599,7 +599,7 @@ ccc2b.Draw()
 ccc2b.SaveAs("Plots/Efficiency(pi-)_vs_d.png")
 
 
-# In[116]:
+# In[66]:
 
 
 h=TH1F("h","Efficiency(K) vs pt",100,0,25)
@@ -617,7 +617,7 @@ c1.Draw()
 c1.SaveAs("Plots/Efficiency(K)_vs_pt.png")
 
 
-# In[117]:
+# In[67]:
 
 
 h1=TH1F("h1","Efficiency(K+) vs pt",100,0,25)
@@ -634,7 +634,7 @@ c1a.Draw()
 c1a.SaveAs("Plots/Efficiency(K+)_vs_pt.png")
 
 
-# In[118]:
+# In[68]:
 
 
 h1b=TH1F("h1b","Efficiency(K-) vs pt",100,0,25)
@@ -651,7 +651,7 @@ c1b.Draw()
 c1b.SaveAs("Plots/Efficiency(K-)_vs_pt.png")
 
 
-# In[119]:
+# In[69]:
 
 
 h2=TH1F("h2","Efficiency(pi) vs pt",100,0,25)
@@ -668,7 +668,7 @@ c2.Draw()
 c2.SaveAs("Plots/Efficiency(pi)_vs_pt.png")
 
 
-# In[120]:
+# In[70]:
 
 
 h2a=TH1F("h2a","Efficiency(pi+) vs pt",100,0,25)
@@ -685,7 +685,7 @@ c2a.Draw()
 c2a.SaveAs("Plots/Efficiency(pi+)_vs_pt.png")
 
 
-# In[121]:
+# In[71]:
 
 
 h2b=TH1F("h2b","Efficiency(pi-) vs pt",100,0,25)
@@ -702,7 +702,7 @@ c2b.Draw()
 c2b.SaveAs("Plots/Efficiency(pi-)_vs_pt.png")
 
 
-# In[122]:
+# In[72]:
 
 
 h3=TH1F("h3","Efficiency vs pt",100,0,25)
@@ -720,7 +720,7 @@ c3.SaveAs("Plots/Efficiency_vs_pt.png")
     
 
 
-# In[123]:
+# In[73]:
 
 
 ccc3=TCanvas("ccc3","d distr",200,10,700,500)
@@ -741,7 +741,7 @@ ccc3.Draw()
 ccc3.SaveAs("Plots/displacement_distributions.png")
 
 
-# In[124]:
+# In[74]:
 
 
 c5=TCanvas("c5","K",200,10,700,500)
@@ -762,7 +762,7 @@ c5.Draw()
 c5.SaveAs("Plots/Gen_vs_Reco_K.png")
 
 
-# In[125]:
+# In[75]:
 
 
 c6=TCanvas("c6","pi",200,10,700,500)
@@ -783,7 +783,7 @@ c6.Draw()
 c6.SaveAs("Plots/Gen_vs_Reco_pi.png")
 
 
-# In[126]:
+# In[76]:
 
 
 c9=TCanvas("c9","dR",200,10,700,500)
@@ -792,7 +792,7 @@ c9.Draw()
 c9.SaveAs("Plots/dR.png")
 
 
-# In[127]:
+# In[77]:
 
 
 c10=TCanvas("c10","dR dei K",200,10,700,500)
@@ -801,7 +801,7 @@ c10.Draw()
 c10.SaveAs("Plots/dR(K).png")
 
 
-# In[128]:
+# In[78]:
 
 
 c11=TCanvas("c11","dR dei pi",200,10,700,500)
@@ -810,7 +810,7 @@ c11.Draw()
 c11.SaveAs("Plots/dR(pi).png")
 
 
-# In[129]:
+# In[79]:
 
 
 h10=TH1F("h10","Efficiency(Phi) vs pt",100,0,25)
@@ -827,7 +827,7 @@ c12.Draw()
 c12.SaveAs("Plots/Efficiency(Phi)_vs_pt.png")
 
 
-# In[130]:
+# In[80]:
 
 
 h11=TH1F("h11","Efficiency(Ks) vs pt",100,0,25)
@@ -844,7 +844,7 @@ c13.Draw()
 c13.SaveAs("Plots/Efficiency(Ks)_vs_pt.png")
 
 
-# In[131]:
+# In[81]:
 
 
 c14=TCanvas("c14","dR dei Phi",200,10,700,500)
@@ -853,7 +853,7 @@ c14.Draw()
 c14.SaveAs("Plots/dR(Phi).png")
 
 
-# In[132]:
+# In[82]:
 
 
 c15=TCanvas("c15","dR dei Ks",200,10,700,500)
@@ -862,7 +862,7 @@ c15.Draw()
 c15.SaveAs("Plots/dR(Ks).png")
 
 
-# In[133]:
+# In[83]:
 
 
 h12=TH1F("h12","Efficiency(B) vs pt",100,0,25)
@@ -879,7 +879,7 @@ c16.Draw()
 c16.SaveAs("Plots/Efficiency(B)_vs_pt.png")
 
 
-# In[134]:
+# In[84]:
 
 
 c17=TCanvas("c17","dR dei B",200,10,700,500)
@@ -949,7 +949,7 @@ cc1.SaveAs("Plots/compared_efficiencies_pip.png")
 
 cc2=TCanvas("cc2","Efficiency Km trigger compared to no trigger",200,10,700,500)
 cc2.cd()
-hEffNT=hNumKm.Clone("Efficiency for K+, trigger compared to no trigger")
+hEffNT=hNumKm.Clone("Efficiency for K-, trigger compared to no trigger")
 hEffNT.Divide(hDenKm)
 hEffT=M_hNumKm.Clone()
 hEffT.Divide(M_hDenKm)
@@ -957,7 +957,7 @@ hEffNT.SetLineColor(2)
 hEffT.SetLineColor(4)
 hEffNT.Draw()
 hEffT.Draw("same")
-hEffNT.SetTitle("Efficiency for K+, trigger compared to no trigger")
+hEffNT.SetTitle("Efficiency for K-, trigger compared to no trigger")
 hEffNT.GetXaxis().SetTitle("p_{t} [Gev/c]")
 hEffNT.GetYaxis().SetTitle("Efficiency")
 legend=TLegend(0.3,0.2,0.15,0.4)
@@ -1068,7 +1068,19 @@ legend.Draw()
 cc6.Draw()
 cc6.SaveAs("Plots/compared_efficiencies_B.png")
 
-!jupyter nbconvert --to script Untitled.ipynb
+
+# In[ ]:
+
+
+get_ipython().system('jupyter nbconvert --to script Untitled.ipynb')
+
+
+# In[ ]:
+
+
+
+
+
 # In[ ]:
 
 
